@@ -37,7 +37,7 @@ YOURS, ON YOUR PHONE
 • Your library stays on your phone
 • Back up your whole library to one file and restore it on a new phone
 
-Shelf is free and open source. Book details and covers come from Google Books and Open Library.
+Shelf is free and open source. Book details and covers come from Open Library.
 ```
 
 ## Category and contact

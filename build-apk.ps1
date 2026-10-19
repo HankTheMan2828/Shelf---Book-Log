@@ -7,8 +7,6 @@
 #   .\build-apk.ps1            debug APK for phones (arm64), for sideloading: dist\Shelf.apk
 #   .\build-apk.ps1 -Emulator  the same plus x86_64, for the Android emulator
 #   .\build-apk.ps1 -Release   signed App Bundle for Google Play: dist\Shelf.aab
-#
-# The Google Books key is read from google-books.key (never committed) and baked into the build.
 param([switch]$Emulator, [switch]$Release)
 $ErrorActionPreference = 'Stop'
 Set-Location $PSScriptRoot
@@ -16,11 +14,6 @@ Set-Location $PSScriptRoot
 $env:JAVA_HOME = 'C:\Program Files\Microsoft\jdk-17.0.20.101-hotspot'
 $env:ANDROID_HOME = "$env:LOCALAPPDATA\Android\Sdk"
 $env:NDK_HOME = "$env:ANDROID_HOME\ndk\28.2.13676358"
-
-$key = if (Test-Path google-books.key) { "$(Get-Content google-books.key -Raw)".Trim() } else { '' }
-if ($key) { $env:SHELF_GOOGLE_BOOKS_KEY = $key }
-elseif ($Release) { throw 'google-books.key is empty. A Play build without it would rarely find books on Google.' }
-else { Write-Warning 'google-books.key is empty: Google Books will run on the shared keyless quota.' }
 
 if ($Release -and -not (Test-Path "$env:USERPROFILE\.shelf-signing\keystore.properties")) {
     throw 'No upload key in ~\.shelf-signing. See README, "Releasing".'

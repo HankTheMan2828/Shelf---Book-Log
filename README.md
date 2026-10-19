@@ -2,7 +2,7 @@
 
 A small Android book log in the look of [Rise](https://github.com/HankTheMan2828). Books sit on a
 shelf as covers (1, 3 or 6 per row) with star ratings; tap one to rate it and keep notes. **Add**
-looks the book up on Google Books and Open Library for its cover and ISBN, and falls back to letting
+looks the book up on Open Library for its cover and ISBN, and falls back to letting
 you pick a photo and type the ISBN yourself. Settings has the light/dark look and one-file
 backup/restore.
 
@@ -17,11 +17,13 @@ Data lives in the app's private storage: `library.json` plus a `covers/` folder.
 
 ## Book search
 
-Google Books and Open Library are asked at once; results are merged, ranked by how well they match
-what was typed (typos included), and spin-offs like summaries and workbooks are pushed down.
-Google needs an API key for reliable results: put it in `google-books.key` (never committed) and
-`build-apk.ps1` bakes it into the build. Without it Google runs on a shared keyless quota that is
-usually used up, and search falls back to Open Library alone.
+Open Library only: free, no key, no quota to run out. Its title search needs exact spelling, so
+when the exact search isn't convincing (wrong title, no cover, wrong author) Shelf sends rescue
+searches at once: a plain keyword search plus one per main word of the title (up to three), so a
+single misspelled word can't sink the rest. Everything that comes back is merged and ranked by
+how closely it matches what was typed (typos included), with spin-offs like summaries and
+workbooks pushed down. A title with every word misspelled ("midnite libary") still won't be
+found; the app then offers "Add it yourself".
 
 ## Building
 

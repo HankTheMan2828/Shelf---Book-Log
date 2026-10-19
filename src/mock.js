@@ -43,9 +43,10 @@
     return r.json();
   };
 
-  async function openLibrary(title, author) {
-    const q = new URLSearchParams({ title, limit: "8", fields: "title,author_name,isbn,cover_i,first_publish_year" });
-    if (author) q.set("author", author);
+  // One Open Library search: [params] is the title or keyword part; the author narrows a title search.
+  async function search(params, author) {
+    const q = new URLSearchParams({ ...params, limit: "8", fields: "title,author_name,isbn,cover_i,first_publish_year" });
+    if (author && params.title) q.set("author", author);
     const { docs = [] } = await getJson("https://openlibrary.org/search.json?" + q);
     return docs.map((d) => ({
       title: d.title, author: (d.author_name || [])[0] || "", isbn: pickIsbn(d.isbn),
@@ -53,19 +54,14 @@
       year: d.first_publish_year || null, source: "Open Library",
     }));
   }
-  async function google(title, author) {
-    const q = new URLSearchParams({ q: `${title} ${author}`.trim(), maxResults: "10", printType: "books" });
-    const { items = [] } = await getJson("https://www.googleapis.com/books/v1/volumes?" + q);
-    return items.map(({ volumeInfo: v }) => ({
-      title: mainTitle(v.title), author: (v.authors || [])[0] || "",
-      isbn: pickIsbn((v.industryIdentifiers || []).map((i) => i.identifier)),
-      coverUrl: v.imageLinks?.thumbnail ? v.imageLinks.thumbnail.replace("http://", "https://").replace("&edge=curl", "") + "&fife=w800-h1200" : null,
-      year: +String(v.publishedDate || "").slice(0, 4) || null, source: "Google Books",
-    }));
+
+  const STOPWORDS = ["the", "and", "of", "a", "an", "to", "in", "for", "with", "on", "at", "by", "from"];
+  function rescueWords(title) {
+    const words = [...new Set(norm(title).split(" ").filter((w) => w.length >= 3 && !STOPWORDS.includes(w)))].sort((a, b) => b.length - a.length);
+    return words.length < 2 ? [] : words.slice(0, 3);
   }
 
   const SPINOFFS = ["summary", "study guide", "workbook", "conversation starters", "discussion", "analysis", "sparknotes", "cliffsnotes", "journal", "calendar", "coloring", "box set", "collection set", "trivia", "quiz", "notebook", "planner", "adaptation"];
-  const COVER_RANK = { "Google Books": 2, "Open Library": 1 };
   function score(m, t, a) {
     const mt = titleKey(m.title), full = norm(m.title);
     let s = mt === t ? 8 : mt.startsWith(t) || t.startsWith(mt) ? 6 : (() => { const x = similarity(mt, t); return x >= 0.6 ? x * 7 : 0; })();
@@ -76,6 +72,11 @@
     if (SPINOFFS.some((w) => full.includes(w) && !t.includes(w))) s -= 6;
     return s + (m.coverUrl ? 2 : 0) + (m.isbn ? 1 : 0);
   }
+  function convincing(m, title, author) {
+    const t = titleKey(title), a = norm(author), mt = titleKey(m.title);
+    const titleOk = mt === t || mt.startsWith(t) || t.startsWith(mt);
+    return titleOk && (!a || score(m, t, a) - score(m, t, "") >= 4) && !!m.coverUrl;
+  }
   function rank(all, title, author, limit) {
     const t = titleKey(title), a = norm(author);
     const scored = all.map((m, i) => [score(m, t, a), i, m]).sort((x, y) => y[0] - x[0] || x[1] - y[1]);
@@ -83,30 +84,33 @@
     const out = [];
     for (const [, , m] of scored) {
       const prev = out.find((p) => key(p) === key(m));
-      if (prev) {
-        if (m.coverUrl && (!prev.coverUrl || COVER_RANK[m.source] > COVER_RANK[prev._coverFrom])) { prev.coverUrl = m.coverUrl; prev._coverFrom = m.source; }
-        prev.isbn ||= m.isbn;
-        if (m.source === "Open Library" && m.year) prev.year = m.year; else prev.year ||= m.year;
-      } else if (out.length < limit) out.push({ ...m, _coverFrom: m.source });
+      if (prev) { prev.coverUrl ||= m.coverUrl; prev.isbn ||= m.isbn; prev.year ||= m.year; }
+      else if (out.length < limit) out.push({ ...m });
     }
-    return out.map(({ _coverFrom, ...m }) => m);
+    return out;
   }
 
   async function lookup({ title, author }) {
-    const got = await Promise.allSettled([google(title, author), openLibrary(title, author)]);
-    if (got.every((g) => g.status === "rejected")) throw "Couldn't reach the book catalogs.";
-    const out = rank(got.flatMap((g) => g.value || []), title, author, 6);
+    let all = [], answered = false;
+    try { all = await search({ title }, author); answered = true; } catch {}
+    const first = rank(all, title, author, 6);
+    if (first[0] && convincing(first[0], title, author)) return first;
+    const rescues = [{ q: `${title} ${author}`.trim() }, ...rescueWords(title).map((w) => ({ title: w }))];
+    for (const r of await Promise.allSettled(rescues.map((p) => search(p, author)))) {
+      if (r.status === "fulfilled") { answered = true; all = all.concat(r.value); }
+    }
+    if (!answered) throw "Couldn't reach Open Library.";
+    const out = rank(all, title, author, 6);
     const best = out[0];
     if (best && !best.isbn) {
       try {
         const main = mainTitle(best.title);
-        const twin = (await openLibrary(main, lastName(best.author))).find((d) => d.isbn && similarity(titleKey(d.title), titleKey(main)) >= 0.85);
+        const twin = (await search({ title: main }, lastName(best.author))).find((d) => d.isbn && similarity(titleKey(d.title), titleKey(main)) >= 0.85);
         if (twin) { best.isbn = twin.isbn; best.coverUrl ||= twin.coverUrl; best.year ||= twin.year; }
       } catch {}
     }
     return out;
   }
-
   // ---------- Commands ----------
   const cmds = {
     load: () => ({ books: lib.books, prefs: lib.prefs, coversDir: "mock" }),

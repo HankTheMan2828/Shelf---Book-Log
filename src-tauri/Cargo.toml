@@ -22,7 +22,7 @@ base64 = "0.22"
 # Backups: the save/open pickers, and writing through Android's content:// URIs they hand back.
 tauri-plugin-dialog = "2"
 tauri-plugin-fs = "2"
-tokio = { version = "1", features = ["macros"] }
+tokio = { version = "1", features = ["macros", "rt"] }
 
 [dev-dependencies]
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }

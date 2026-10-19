@@ -32,14 +32,14 @@ Then work through **Dashboard → Set up your app**. Answers for each:
 ### Data safety answers
 
 Shelf keeps everything on the phone, with one exception: the title and author typed into **Add**
-are sent to Google Books and Open Library as a search. Play counts sending data off the phone as
+are sent to Open Library as a search. Play counts sending data off the phone as
 "collecting" it, even when you never see or store it. The honest answer:
 
 - **Does your app collect or share any of the required user data types?** Yes
 - **Is all of the user data collected by your app encrypted in transit?** Yes
 - **Do you provide a way for users to request that their data is deleted?** Yes (books are deleted in the app; searches are never stored)
 - Data type: **App activity → In-app search history**
-  - Collected: **Yes** · Shared: **No** (it goes to services the app uses to do the search, not passed on for anyone else's use)
+  - Collected: **Yes** · Shared: **No** (it goes to the service the app uses to do the search, not passed on for anyone else's use)
   - **Processed ephemerally:** Yes · **Required** (not optional)
   - Purpose: **App functionality**
 
@@ -96,6 +96,3 @@ from a branch**, branch `main`, folder `/docs` → Save. In a minute the policy 
 - `C:\Users\DyckH\.shelf-signing\` holds the **upload key** and its password. Copy that folder
   somewhere safe (Proton Drive, a USB stick). If it's lost, Google can reset the upload key, but
   it takes a support request and a few days.
-- `google-books.key` holds the Google Books API key. It's baked into each build and never
-  committed. The free quota is 1,000 searches a day; if Shelf ever outgrows that, request more in
-  Google Cloud Console → Books API → Quotas.
