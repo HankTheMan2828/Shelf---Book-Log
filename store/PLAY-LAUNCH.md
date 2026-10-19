@@ -18,7 +18,7 @@ Then work through **Dashboard → Set up your app**. Answers for each:
 
 | Section | Answer |
 | --- | --- |
-| Privacy policy | `https://hanktheman2828.github.io/Shelf/privacy.html` (goes live once the repo is pushed and Pages is on, see below) |
+| Privacy policy | `https://hanktheman2828.github.io/Shelf---Book-Log/privacy.html` (goes live once the repo is pushed and Pages is on, see below) |
 | App access | All functionality is available without any special access |
 | Ads | No, my app does not contain ads |
 | Content rating | Category **Reference, News, or Educational**; answer **No** to every content question → rated Everyone / 3+ |
@@ -89,7 +89,7 @@ questions about the test, wait for review (usually a few days, up to 7), then cr
 
 After the code is on GitHub: repo **Settings → Pages → Build and deployment** → Source **Deploy
 from a branch**, branch `main`, folder `/docs` → Save. In a minute the policy is live at
-`https://hanktheman2828.github.io/Shelf/privacy.html`.
+`https://hanktheman2828.github.io/Shelf---Book-Log/privacy.html`.
 
 ## Keys to keep safe
 
