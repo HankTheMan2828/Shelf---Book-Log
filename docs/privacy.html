@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shelf privacy policy</title>
+  <style>
+    :root { color-scheme: dark light; --bg: #101013; --text: #F2F1E8; --muted: #A1A1AA; --accent: #FFAF01; --line: rgba(255,255,255,.12); }
+    @media (prefers-color-scheme: light) { :root { --bg: #F2F1E8; --text: #101013; --muted: #55555E; --accent: #B86B00; --line: #E4E3DE; } }
+    body { margin: 0; background: var(--bg); color: var(--text); font: 17px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; }
+    main { max-width: 680px; margin: 0 auto; padding: 48px 20px 80px; }
+    .over { font: 700 12px ui-monospace, "Cascadia Mono", monospace; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+    h1 { margin: 6px 0 28px; font-size: 36px; line-height: 1.1; letter-spacing: -1px; }
+    h2 { margin: 36px 0 8px; font-size: 20px; }
+    p, li { color: var(--text); }
+    ul { padding-left: 22px; }
+    a { color: var(--accent); }
+    footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
+  </style>
+</head>
+<body>
+<main>
+  <div class="over">Shelf · Book log for Android</div>
+  <h1>Privacy policy</h1>
+  <p>Last updated October 19, 2026.</p>
+
+  <p>Shelf is a book log. It has no accounts, no ads, no analytics and no servers of its own. Your library lives on your phone.</p>
+
+  <h2>What stays on your phone</h2>
+  <p>Every book you add, with its cover, rating and notes, is stored in the app's private storage on your device. Nobody else can see it, including the developer. Uninstalling the app deletes it.</p>
+  <p>If Android's own device backup is turned on for your Google account, Android may include the app's storage in that backup, as it does for most apps. That is handled by Google under your Google account settings.</p>
+
+  <h2>What leaves your phone</h2>
+  <p>When you add a book, Shelf looks it up so it can fill in the cover and ISBN for you:</p>
+  <ul>
+    <li>The <b>title and author you type</b> are sent to <a href="https://developers.google.com/books">Google Books</a> and <a href="https://openlibrary.org">Open Library</a> as a search.</li>
+    <li>The cover image of the book you pick is downloaded from the same service.</li>
+  </ul>
+  <p>Nothing else is sent: not your other books, ratings, notes, or anything identifying you beyond what any internet request carries (such as your IP address). Those services handle the request under their own policies: <a href="https://policies.google.com/privacy">Google's privacy policy</a> and the <a href="https://archive.org/about/terms">Internet Archive's terms</a> (which runs Open Library). All requests use encrypted HTTPS.</p>
+
+  <h2>Photos you add</h2>
+  <p>If you choose your own cover photo, Shelf asks Android to let you pick one image. Only that image is used, and it is stored with the book on your phone. Shelf cannot see your other photos.</p>
+
+  <h2>Backups you make</h2>
+  <p>"Back up" in settings writes one file with your whole library to a place you choose. It goes nowhere unless you move or share it yourself. "Restore" reads a backup file you pick.</p>
+
+  <h2>Children</h2>
+  <p>Shelf is not directed at children under 13 and collects no personal information from anyone.</p>
+
+  <h2>Changes</h2>
+  <p>If this policy changes, the new version will be posted here with a new date.</p>
+
+  <h2>Contact</h2>
+  <p>Questions or concerns: <a href="https://github.com/HankTheMan2828/Shelf/issues">open an issue on GitHub</a>.</p>
+
+  <footer>Shelf is free and open source: <a href="https://github.com/HankTheMan2828/Shelf">github.com/HankTheMan2828/Shelf</a></footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" shape-rendering="crispEdges">
+  <rect width="1024" height="1024" fill="#FFAF01"/>
+  <!-- Rise's 9x6 book sprite, one cell = 60px. -->
+  <g transform="translate(242 332) scale(60)">
+    <path fill="#FAFAF4" d="M0 0h4v5h-4zM5 0h4v5h-4z"/>
+    <path fill="#101013" d="M4 0h1v6h-1zM0 5h4v1h-4zM5 5h4v1h-4z"/>
+    <path fill="#101013" d="M1 1h2v1h-2zM6 1h2v1h-2zM1 3h2v1h-2zM6 3h2v1h-2z"/>
+  </g>
+</svg>

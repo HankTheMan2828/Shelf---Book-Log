@@ -1,0 +1,11 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. Light status-bar icons: the page under them is always dark
+         (Ember's background, or the ink band styles.css draws there in Cream). -->
+    <style name="Theme.shelf" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowBackground">@color/shelf_ink</item>
+    </style>
+    <color name="shelf_ink">#101013</color>
+</resources>

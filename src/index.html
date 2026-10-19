@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en" data-theme="ember">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+  <meta name="color-scheme" content="dark light">
+  <title>Shelf</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+    <header class="top">
+      <div class="top-text">
+        <div class="overline" id="tally">00 BOOKS</div>
+        <h1 class="wordmark">Shelf <span class="pix pix-book" aria-hidden="true"></span></h1>
+      </div>
+      <button class="circle" id="settings" aria-label="Settings">
+        <span class="pix pix-sliders" aria-hidden="true"></span>
+      </button>
+    </header>
+
+    <!-- Add, view and sort share one line and stay pinned while the shelf scrolls. -->
+    <div class="toolbar" id="toolbar">
+      <button class="add press" id="add">
+        <span class="pix pix-plus" aria-hidden="true"></span><span>Add</span>
+      </button>
+      <div class="seg" role="radiogroup" aria-label="Books per row">
+        <button role="radio" data-cols="1" aria-label="1 per row">1</button>
+        <button role="radio" data-cols="3" aria-label="3 per row">3</button>
+        <button role="radio" data-cols="6" aria-label="6 per row">6</button>
+      </div>
+      <label class="sort press">
+        <span class="sort-label" id="sort-label">Recent</span>
+        <span class="chev" aria-hidden="true"></span>
+        <select id="sort" aria-label="Sort books">
+          <option value="added-desc">Recent</option>
+          <option value="added-asc">Oldest</option>
+          <option value="title">Title A–Z</option>
+          <option value="author">Author A–Z</option>
+          <option value="rating-desc">Top rated</option>
+          <option value="rating-asc">Low rated</option>
+        </select>
+      </label>
+    </div>
+
+    <main id="grid" class="grid" data-cols="3"></main>
+
+    <section class="empty" id="empty" hidden>
+      <span class="pix pix-book big" aria-hidden="true"></span>
+      <div class="overline">00 BOOKS</div>
+      <h2 class="heading">Nothing on the shelf</h2>
+      <p class="body">Tap <b>Add</b> and type a title. Shelf finds the cover and ISBN for you.</p>
+    </section>
+  </div>
+
+  <div class="scrim" id="scrim"></div>
+
+  <!-- One book, opened: rating and notes live here. -->
+  <section class="modal detail" id="detail" role="dialog" aria-modal="true" aria-labelledby="d-title" hidden>
+    <div class="tab tab-accent"><span class="pix pix-book-sm" aria-hidden="true"></span><span id="d-pos">BOOK</span></div>
+    <div class="block ruled">
+      <button class="circle small close" data-close aria-label="Close"><span class="pix pix-cross" aria-hidden="true"></span></button>
+      <div class="detail-scroll">
+        <div class="d-head">
+          <button class="d-cover press" id="d-cover" aria-label="Change cover"></button>
+          <div class="d-info">
+            <div class="view-only">
+              <h2 class="sheet-title" id="d-title"></h2>
+              <p class="d-author" id="d-author"></p>
+              <div class="meta" id="d-meta"></div>
+            </div>
+            <div class="edit-only">
+              <input class="field" id="e-title" placeholder="Title" autocomplete="off">
+              <input class="field" id="e-author" placeholder="Author" autocomplete="off">
+              <input class="field mono" id="e-isbn" placeholder="ISBN" inputmode="numeric" autocomplete="off">
+            </div>
+          </div>
+        </div>
+
+        <div class="d-section">
+          <div class="overline">Your rating</div>
+          <div class="stars big" id="d-stars" role="radiogroup" aria-label="Rating"></div>
+          <div class="meta" id="d-rating-label">NOT RATED</div>
+        </div>
+
+        <div class="d-section notes">
+          <div class="notes-head">
+            <div class="tab"><span class="pix pix-lines" aria-hidden="true"></span>Notes</div>
+            <div class="status" id="d-saved"></div>
+          </div>
+          <textarea class="notes-box" id="d-notes" placeholder="Thoughts, quotes, where you left off…"></textarea>
+        </div>
+
+        <div class="d-actions">
+          <button class="pill glass press" id="d-edit">Edit details</button>
+          <button class="pill danger press" id="d-delete"><span class="pix pix-trash" aria-hidden="true"></span><span>Delete</span></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Adding a book: type it, Shelf looks it up, you confirm (or add a cover yourself). -->
+  <section class="modal sheet" id="add-sheet" role="dialog" aria-modal="true" aria-labelledby="a-heading" hidden>
+    <div class="tab tab-accent"><span class="pix pix-plus" aria-hidden="true"></span>Add a book</div>
+    <div class="block ruled">
+      <button class="circle small close" data-close aria-label="Close"><span class="pix pix-cross" aria-hidden="true"></span></button>
+
+      <form class="step" id="a-form" data-step="form" autocomplete="off">
+        <h2 class="sheet-title" id="a-heading">What are you reading?</h2>
+        <label class="field-label" for="a-title">Title</label>
+        <input class="field" id="a-title" placeholder="The Hobbit" required enterkeyhint="next">
+        <label class="field-label" for="a-author">Author</label>
+        <input class="field" id="a-author" placeholder="J. R. R. Tolkien" enterkeyhint="search">
+        <button class="pill primary press" id="a-find" type="submit"><span>Find book</span><span class="arrow" aria-hidden="true"></span></button>
+        <div class="steps-bar" id="a-progress" hidden><i></i><i></i><i></i><i></i><i></i></div>
+      </form>
+
+      <div class="step" data-step="found" hidden>
+        <div class="overline" id="f-label">Best match</div>
+        <div class="match" id="f-best"></div>
+        <button class="pill primary press" id="f-add"><span>Add to shelf</span><span class="arrow" aria-hidden="true"></span></button>
+        <div class="others" id="f-others-wrap">
+          <div class="overline">Other matches</div>
+          <div id="f-others"></div>
+        </div>
+        <button class="link" id="f-none">None of these? Add it yourself</button>
+      </div>
+
+      <div class="step" data-step="manual" hidden>
+        <h2 class="sheet-title" id="m-heading">Couldn't find it</h2>
+        <p class="body" id="m-why"></p>
+        <div class="manual">
+          <button class="pick press" id="m-pick" type="button">
+            <span class="pix pix-plus" aria-hidden="true"></span>
+            <span class="meta">COVER</span>
+          </button>
+          <div class="manual-fields">
+            <div class="meta strong" id="m-book"></div>
+            <label class="field-label" for="m-isbn">ISBN <span class="opt">optional</span></label>
+            <input class="field mono" id="m-isbn" placeholder="978…" inputmode="numeric">
+            <p class="caption">Cover is optional too. Tap the box to pick a photo.</p>
+          </div>
+        </div>
+        <button class="pill primary press" id="m-add"><span>Add to shelf</span><span class="arrow" aria-hidden="true"></span></button>
+        <button class="link" id="m-back">Back to search</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Settings: the look, backups, and where the book data comes from. -->
+  <section class="modal sheet" id="settings-sheet" role="dialog" aria-modal="true" aria-labelledby="s-heading" hidden>
+    <div class="tab tab-accent"><span class="pix pix-sliders" aria-hidden="true"></span>Settings</div>
+    <div class="block ruled">
+      <button class="circle small close" data-close aria-label="Close"><span class="pix pix-cross" aria-hidden="true"></span></button>
+      <div class="step">
+        <h2 class="sheet-title" id="s-heading">Settings</h2>
+
+        <div class="field-label">Look</div>
+        <div class="seg wide" role="radiogroup" aria-label="Look">
+          <button role="radio" data-theme-choice="ember"><span class="pix pix-moon" aria-hidden="true"></span>Ember</button>
+          <button role="radio" data-theme-choice="cream"><span class="pix pix-sun" aria-hidden="true"></span>Cream</button>
+        </div>
+
+        <div class="field-label">Your library</div>
+        <div class="d-actions">
+          <button class="pill glass press" id="s-backup">Back up</button>
+          <button class="pill glass press" id="s-restore">Restore</button>
+        </div>
+        <p class="caption">A backup is one file with every book, rating, note and cover. Restoring adds the books you don't already have and never removes any.</p>
+
+        <div class="about">
+          <div class="meta strong">Shelf <span id="s-version"></span></div>
+          <div class="meta">Book data from Google Books and Open Library</div>
+          <div class="meta">Your books stay on this phone</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <input type="file" id="file" accept="image/*" hidden>
+  <input type="file" id="backup-file" accept="application/json,.json" hidden>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="mock.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
