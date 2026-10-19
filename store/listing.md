@@ -44,9 +44,9 @@ Shelf is free and open source. Book details and covers come from Open Library.
 
 - **App category:** Books & Reference
 - **Tags:** Books, Reading tracker (pick the closest Play offers)
-- **Website:** https://hanktheman2828.github.io/Shelf---Book-Log/
+- **Website:** https://hanktheman2828.github.io/Shelf---Book-Log/docs/
 - **Email:** required and shown publicly on the listing; use the address you want readers to write to
-- **Privacy policy:** https://hanktheman2828.github.io/Shelf---Book-Log/privacy.html
+- **Privacy policy:** https://hanktheman2828.github.io/Shelf---Book-Log/docs/privacy.html
 
 ## Graphics
 

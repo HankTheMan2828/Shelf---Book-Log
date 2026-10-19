@@ -18,7 +18,7 @@ Then work through **Dashboard → Set up your app**. Answers for each:
 
 | Section | Answer |
 | --- | --- |
-| Privacy policy | `https://hanktheman2828.github.io/Shelf---Book-Log/privacy.html` (goes live once the repo is pushed and Pages is on, see below) |
+| Privacy policy | `https://hanktheman2828.github.io/Shelf---Book-Log/docs/privacy.html` (live) |
 | App access | All functionality is available without any special access |
 | Ads | No, my app does not contain ads |
 | Content rating | Category **Reference, News, or Educational**; answer **No** to every content question → rated Everyone / 3+ |
@@ -85,11 +85,12 @@ After 14 days with 12+ opted-in testers, **Dashboard → Apply for production** 
 questions about the test, wait for review (usually a few days, up to 7), then create a
 **Production** release with the same AAB and roll it out.
 
-## Turning on GitHub Pages (for the privacy policy URL)
+## The privacy policy page
 
-After the code is on GitHub: repo **Settings → Pages → Build and deployment** → Source **Deploy
-from a branch**, branch `main`, folder `/docs` → Save. In a minute the policy is live at
-`https://hanktheman2828.github.io/Shelf---Book-Log/privacy.html`.
+GitHub Pages serves the repo's `main` branch from its root folder, so `docs/privacy.html` is live
+at `https://hanktheman2828.github.io/Shelf---Book-Log/docs/privacy.html`. Edit that file and push
+to update it. Keep the Pages setting as it is: switching its folder to `/docs` would move the
+page to a different address than the one Play has on file.
 
 ## Keys to keep safe
 
